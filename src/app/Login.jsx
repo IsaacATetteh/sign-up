@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
+
 export const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
