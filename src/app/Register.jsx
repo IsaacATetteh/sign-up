@@ -1,5 +1,8 @@
+"use client";
 import Image from "next/image";
+import { userAgent } from "next/server";
 import React from "react";
+import { useState } from "react";
 //import { addToDatabase } from "./utils/database";
 
 export const Register = (props) => {
@@ -9,7 +12,25 @@ export const Register = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(name);
-    // addToDatabase(email, name, password);
+    console.log(password);
+    console.log(email);
+    fetch("http://localhost:5000/register", {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        password,
+        email,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data, "userRegister");
+      });
   };
   return (
     <div className="min-h-screen w-full flex justify-center items-center bg-[#C5E4E7] font-mono">
