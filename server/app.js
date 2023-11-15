@@ -5,6 +5,9 @@ const mongoose = require("mongoose");
 const mongoUrl = "mongodb+srv://Isaac:123@cluster0.prn0cfs.mongodb.net/";
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "fnofsoifnsof90943903fefewffwfwf";
+
 app.use(cors());
 mongoose
   .connect(mongoUrl, { useNewUrlParser: true })
@@ -20,6 +23,39 @@ app.listen(5000, () => {
 
 require("./userDetails");
 const User = mongoose.model("test");
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.send({ error: "User does not exist" });
+  }
+  if (await bcrypt.compare(password, user.password)) {
+    const token = jwt.sign({ email: user.email }, JWT_SECRET);
+    if (res.status(201)) {
+      return res.json({ status: "ok", data: token });
+    } else {
+      return res.json({ error: "error" });
+    }
+  }
+
+  return res.json({ status: "error", error: "Password incorrect" });
+});
+
+app.post("/userData", async (req, res) => {
+  const { token } = req.body;
+  try {
+    const user = jwt.verify(token, JWT_SECRET);
+    const userEmail = user.email;
+    User.findOne({ email: userEmail })
+      .then((data) => {
+        res.send({ status: "ok", data: data });
+      })
+      .catch((error) => {
+        res.send({ status: "error", data: error });
+      });
+  } catch (error) {}
+});
 
 app.post("/register", async (req, res) => {
   const { name, password, email } = req.body;

@@ -8,6 +8,27 @@ export const Login = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(email);
+    fetch("http://localhost:5000/login", {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data, "userRegister");
+        if (data.status == "ok") {
+          alert("login successful");
+          window.localStorage.setItem("token", data.data);
+          window.location.href = "./Home";
+        }
+      });
   };
   return (
     <div className="min-h-screen w-full flex justify-center items-center bg-[#C5E4E7] font-mono">
