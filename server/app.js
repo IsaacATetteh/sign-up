@@ -7,6 +7,7 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "fnofsoifnsof90943903fefewffwfwf";
+const ws = require("ws");
 
 app.use(cors());
 mongoose
@@ -88,4 +89,11 @@ app.post("/post", async (req, res) => {
   } catch (error) {
     res.send({ status: "error" });
   }
+});
+
+const server = app.listen(4040);
+
+const wss = new ws.WebSocketServer({ server });
+wss.on("connection", (connection) => {
+  console.log("Connected to websocket");
 });
