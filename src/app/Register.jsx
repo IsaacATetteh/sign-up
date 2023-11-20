@@ -48,15 +48,15 @@ export const Register = (props) => {
               Register an Account
             </p>
             <p className="text-[14px] text-gray-400 pb-8">
-              Please provide your name, email address and password.
+              Please provide your username, email address and password.
             </p>
             <label className="text-sm" htmlFor="">
-              <p className="text-[rgb(5,44,95)] pb-1 font-medium">Name</p>
+              <p className="text-[rgb(5,44,95)] pb-1 font-medium">Username</p>
             </label>
             <input
               className="block border-gray-200 rounded-md h-[38px]  border-2 w-[400px] mb-4"
               type="text"
-              placeholder="John Doe"
+              placeholder="JohnDoe123"
               onChange={(e) => setName(e.target.value)}
             />
             <label className="text-sm" htmlFor="">

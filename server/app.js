@@ -66,14 +66,24 @@ app.post("/register", async (req, res) => {
     if (oldUser) {
       return res.send({ error: "User already exists" });
     }
-    await User.create({
+    const newUser = await User.create({
       name,
       password: encryptedPassword,
       email,
     });
-    res.send({ status: "ok" });
+    const token = jwt.sign({ email: newUser.email }, JWT_SECRET);
+    res.send({ status: "ok", token });
   } catch (error) {
     res.send({ status: "error" });
+  }
+});
+
+app.get("/userList", async (req, res) => {
+  try {
+    const users = await User.find({}, "name"); // Fetch only the name field
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -94,6 +104,10 @@ app.post("/post", async (req, res) => {
 const server = app.listen(4040);
 
 const wss = new ws.WebSocketServer({ server });
-wss.on("connection", (connection) => {
+wss.on("connection", (connection, req) => {
+  const cookies = req.headers.cookie;
+  console.log(req.headers);
   console.log("Connected to websocket");
+
+  connection.send(JSON.stringify(req.headers));
 });
